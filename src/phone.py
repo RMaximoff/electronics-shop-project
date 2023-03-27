@@ -20,24 +20,24 @@ class Phone(Item):
         return self._number_of_sim
 
     @number_of_sim.setter
-    def number_of_sim(self, name: str):
-        try:
-            if len(name) > 10:
-                raise ValueError('Количество физических SIM-карт должно быть целым числом больше нуля')
-            self._name = name
-        except ValueError as exception:
-            print(f'Exception: {exception}')
-
-    def __add__(self, new_item):
-
-        if isinstance(new_item, Phone):
-            return Phone(self.quantity + new_item.quantity)
-
-        elif isinstance(new_item, Item):
-            return Item(self.quantity + new_item.quantity)
-
+    def number_of_sim(self, num: int):
+        if num < 1:
+            raise ValueError("Количество физических SIM-карт должно быть целым числом больше нуля")
         else:
-            raise TypeError('Нельзя сложить Phone или Item с экземплярами не Phone или Item классов.')
+            self._number_of_sim = num
+
+    @classmethod
+    def __verity_classes(cls, other):
+        if not isinstance(other, Item | Phone):
+            raise TypeError(f"Невозможно выполнить операцию")
+
+    def __add__(self, other):
+        self.__verity_classes(other)
+        return self.quantity + other.quantity
+
+    def __radd__(self, other):
+        self.__verity_classes(other)
+        return self.quantity + other.quantity
 
     def __repr__(self):
         return f"{self.__class__.__name__}('{self._name}', {self.price}, {self.quantity}, {self._number_of_sim})"
