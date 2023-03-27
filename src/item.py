@@ -62,12 +62,20 @@ class Item:
         """
         Класс-метод инициализирующий экземпляры класса Item данными из файла src/items.csv
         """
-        with open(cls.csv_file, 'r') as file:
-            reader = DictReader(file)
-            for row in reader:
-                cls(row['name'],
-                    cls.string_to_number(row['price']),
-                    cls.string_to_number(row['quantity']))
+        try:
+            with open(cls.csv_file, 'r') as file:
+                reader = DictReader(file)
+                for row in reader:
+                    try:
+                        cls(row['name'],
+                            cls.string_to_number(row['price']),
+                            cls.string_to_number(row['quantity'])
+                            )
+                    except KeyError:
+                        raise InstantiateCSVError()
+
+        except FileNotFoundError:
+            raise FileNotFoundError('Отсутствует файл item.csv')
 
     def __repr__(self):
         return f"{self.__class__.__name__}('{self._name}', {self.price}, {self.quantity})"
@@ -75,3 +83,14 @@ class Item:
     def __str__(self):
         return self._name
 
+
+class InstantiateCSVError(Exception):
+    """
+    Исключение, возникающее при ошибке чтения данных из файла CSV.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.message = args[0] if args else 'Файл item.csv поврежден'
+
+    def __str__(self):
+        return self.message

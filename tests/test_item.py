@@ -1,5 +1,6 @@
 import pytest
-from src.item import Item
+from src.item import Item, InstantiateCSVError
+from pathlib import Path
 
 item1 = Item('Смартфон', 10, 5)
 
@@ -32,8 +33,18 @@ def test_string_to_number():
 
 
 def test_instantiate_from_csv():
+
     Item.instantiate_from_csv()
-    assert len(Item.all) == 6
+    assert len(Item.all) == 10
+
+    Item.csv_file = 'test.csv'
+    with pytest.raises(FileNotFoundError):
+        Item.instantiate_from_csv()
+
+    Item.csv_file = Path.joinpath(Path(__file__).parent.parent, 'src/test_items.csv')
+    with pytest.raises(InstantiateCSVError):
+        item1.instantiate_from_csv()
+
 
 
 def test_repr():
@@ -47,5 +58,3 @@ def test_str():
     expected = "Смартфон"
     assert str(item) == expected
 
-
-#     poetry run pytest --cov
