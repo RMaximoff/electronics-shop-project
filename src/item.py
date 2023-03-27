@@ -69,7 +69,8 @@ class Item:
                     try:
                         cls(row['name'],
                             cls.string_to_number(row['price']),
-                            cls.string_to_number(row['quantity']))
+                            cls.string_to_number(row['quantity'])
+                            )
                     except KeyError:
                         raise InstantiateCSVError()
 
