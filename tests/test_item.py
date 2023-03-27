@@ -33,7 +33,7 @@ def test_string_to_number():
 
 def test_instantiate_from_csv():
     Item.instantiate_from_csv()
-    assert len(Item.all) == 6
+    assert len(Item.all) == 9
 
 
 def test_repr():
@@ -47,5 +47,3 @@ def test_str():
     expected = "Смартфон"
     assert str(item) == expected
 
-
-#     poetry run pytest --cov
